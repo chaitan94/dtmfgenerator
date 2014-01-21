@@ -1,6 +1,8 @@
 package com.bkc.dtmfgenerator;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 import android.app.Activity;
 import android.media.AudioManager;
@@ -13,13 +15,62 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.TextView;
+import fi.iki.elonen.NanoHTTPD;
 
 public class MainActivity extends Activity implements OnTouchListener{
 
-    Button b1,b2,b3,b4,b5,b6,b7,b8,b9,bserve;
-    TextView tvip;
-    ToneGenerator tg;
-    mServer server;
+    private Button b1,b2,b3,b4,b5,b6,b7,b8,b9,bserve;
+    private TextView tvip;
+    private ToneGenerator tg;
+    private mServer server;
+    
+    private class mServer extends NanoHTTPD {
+    	public mServer() {
+    		super(8080);
+    	}
+
+    	@Override
+        public Response serve(String uri, Method method, 
+                              Map<String, String> header,
+                              Map<String, String> parameters,
+                              Map<String, String> files) {
+    		String answer = "";
+    		if(uri.contentEquals("/")){
+    	        InputStream is;
+				try {
+					is = getAssets().open("index.html");
+	    	        int size = is.available();
+	    	        byte[] buffer = new byte[size];
+	    	        is.read(buffer); is.close();
+	    	        String str = new String(buffer);
+	    	        answer += str;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+    		}else if(uri.contentEquals("/1")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_1);
+    		}else if(uri.contentEquals("/2")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_2);
+    		}else if(uri.contentEquals("/3")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_3);
+    		}else if(uri.contentEquals("/4")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_4);
+    		}else if(uri.contentEquals("/5")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_5);
+    		}else if(uri.contentEquals("/6")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_6);
+    		}else if(uri.contentEquals("/7")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_7);
+    		}else if(uri.contentEquals("/8")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_8);
+    		}else if(uri.contentEquals("/9")){
+    			tg.startTone(ToneGenerator.TONE_DTMF_9);
+    		}else if(uri.contentEquals("/stop")){
+    			tg.stopTone();
+    		}else{answer="404";}
+            return new NanoHTTPD.Response(answer);
+        }
+    }
     
     @SuppressWarnings("deprecation")
 	@Override
