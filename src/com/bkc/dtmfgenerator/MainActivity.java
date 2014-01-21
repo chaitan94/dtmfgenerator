@@ -1,20 +1,28 @@
 package com.bkc.dtmfgenerator;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnTouchListener{
 
     Button b1,b2,b3,b4,b5,b6,b7,b8,b9,bserve;
+    TextView tvip;
     ToneGenerator tg;
+    mServer server;
     
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -28,6 +36,7 @@ public class MainActivity extends Activity implements OnTouchListener{
         b8 = (Button) findViewById(R.id.b8);
         b9 = (Button) findViewById(R.id.b9);
         bserve = (Button) findViewById(R.id.bserve);
+        tvip = (TextView) findViewById(R.id.tvip);
         b1.setOnTouchListener(this);
         b2.setOnTouchListener(this);
         b3.setOnTouchListener(this);
@@ -39,17 +48,29 @@ public class MainActivity extends Activity implements OnTouchListener{
         b9.setOnTouchListener(this);
         bserve.setOnTouchListener(this);
         tg = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+        
+        server = new mServer();
+        try {
+			server.start();
+			String IP;
+			WifiManager wim= (WifiManager) getSystemService(WIFI_SERVICE);
+			if(!wim.isWifiEnabled()){
+				tvip.setText("Enable wi-fi and restart the app");
+			}else{
+				IP=Formatter.formatIpAddress(wim.getConnectionInfo().getIpAddress());
+				tvip.setText(IP);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+	protected void onDestroy() {
+		super.onDestroy();
+        if (server != null)
+            server.stop();
+	}
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
