@@ -23,10 +23,11 @@ public class MainActivity extends Activity implements OnTouchListener{
     private TextView tvip;
     private ToneGenerator tg;
     private mServer server;
+    private int port = 4000;
     
     private class mServer extends NanoHTTPD {
     	public mServer() {
-    		super(8080);
+    		super(port);
     	}
 
     	@Override
@@ -109,7 +110,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 				tvip.setText("Enable wi-fi and restart the app");
 			}else{
 				IP=Formatter.formatIpAddress(wim.getConnectionInfo().getIpAddress());
-				tvip.setText(IP);
+				tvip.setText(IP+":"+port);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
