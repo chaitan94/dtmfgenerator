@@ -24,7 +24,7 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000b;
+        public static final int action_settings=0x7f08000c;
         public static final int b1=0x7f080000;
         public static final int b2=0x7f080001;
         public static final int b3=0x7f080002;
@@ -35,6 +35,7 @@ public final class R {
         public static final int b8=0x7f080007;
         public static final int b9=0x7f080008;
         public static final int bserve=0x7f080009;
+        public static final int etkey=0x7f08000b;
         public static final int tvip=0x7f08000a;
     }
     public static final class layout {

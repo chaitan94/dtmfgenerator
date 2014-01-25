@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import fi.iki.elonen.NanoHTTPD;
 
@@ -21,6 +22,7 @@ public class MainActivity extends Activity implements OnTouchListener{
 
     private Button b1,b2,b3,b4,b5,b6,b7,b8,b9,bserve;
     private TextView tvip;
+    private EditText etkey;
     private ToneGenerator tg;
     private mServer server;
     private int port = 4000;
@@ -48,27 +50,31 @@ public class MainActivity extends Activity implements OnTouchListener{
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-    		}else if(uri.contentEquals("/1")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_1);
-    		}else if(uri.contentEquals("/2")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_2);
-    		}else if(uri.contentEquals("/3")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_3);
-    		}else if(uri.contentEquals("/4")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_4);
-    		}else if(uri.contentEquals("/5")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_5);
-    		}else if(uri.contentEquals("/6")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_6);
-    		}else if(uri.contentEquals("/7")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_7);
-    		}else if(uri.contentEquals("/8")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_8);
-    		}else if(uri.contentEquals("/9")){
-    			tg.startTone(ToneGenerator.TONE_DTMF_9);
-    		}else if(uri.contentEquals("/stop")){
-    			tg.stopTone();
-    		}else{answer="404";}
+    		}else{
+    			if(parameters.get("p").contentEquals(etkey.getText())){
+		    		if(uri.contentEquals("/1")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_1);
+		    		}else if(uri.contentEquals("/2")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_2);
+		    		}else if(uri.contentEquals("/3")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_3);
+		    		}else if(uri.contentEquals("/4")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_4);
+		    		}else if(uri.contentEquals("/5")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_5);
+		    		}else if(uri.contentEquals("/6")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_6);
+		    		}else if(uri.contentEquals("/7")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_7);
+		    		}else if(uri.contentEquals("/8")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_8);
+		    		}else if(uri.contentEquals("/9")){
+		    			tg.startTone(ToneGenerator.TONE_DTMF_9);
+		    		}else if(uri.contentEquals("/stop")){
+		    			tg.stopTone();
+		    		}
+    			}
+			}
             return new NanoHTTPD.Response(answer);
         }
     }
@@ -89,6 +95,7 @@ public class MainActivity extends Activity implements OnTouchListener{
         b9 = (Button) findViewById(R.id.b9);
         bserve = (Button) findViewById(R.id.bserve);
         tvip = (TextView) findViewById(R.id.tvip);
+        etkey = (EditText) findViewById(R.id.etkey);
         b1.setOnTouchListener(this);
         b2.setOnTouchListener(this);
         b3.setOnTouchListener(this);
@@ -100,24 +107,28 @@ public class MainActivity extends Activity implements OnTouchListener{
         b9.setOnTouchListener(this);
         bserve.setOnTouchListener(this);
         tg = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
-        
+
         server = new mServer();
+        startServer();
+    }
+
+    private void startServer() {
         try {
 			server.start();
-			String IP;
 			WifiManager wim= (WifiManager) getSystemService(WIFI_SERVICE);
 			if(!wim.isWifiEnabled()){
-				tvip.setText("Enable wi-fi and restart the app");
+				tvip.setText("Enable wi-fi and click serve/restart app");
 			}else{
+				String IP;
 				IP=Formatter.formatIpAddress(wim.getConnectionInfo().getIpAddress());
 				tvip.setText(IP+":"+port);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 
-    @Override
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
         if (server != null)
@@ -155,6 +166,9 @@ public class MainActivity extends Activity implements OnTouchListener{
                 break;
                 case R.id.b9:
                 tg.startTone(ToneGenerator.TONE_DTMF_9);
+                break;
+                case R.id.bserve:
+                startServer();
                 break;
             }
             break;
