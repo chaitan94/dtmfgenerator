@@ -5,8 +5,14 @@ An app which generates DTMF tones, controlled by a computer wirelessly
 Mobile and computer must be connected to the same network.
 Doesn't use internet, works locally.
 
+###Version 1.1
+* Support 4.0.4
+* Supports all 16 tones
+* Supports Mapping keys to all 16 tones
+* Clearer responses to invalid requests
+
 ###Requirements
-* 4.1 or more Android Mobile
+* 4.0.4 or more Android Mobile
 * A laptop with a modern browser installed (Recommended: Chrome)
 * Wifi connection
 * Internet is not required
@@ -22,6 +28,7 @@ Doesn't use internet, works locally.
 ###Features
 * Works in background
 * Key protected
+* 16 Mappable keys
 
 ### Thanks
 * NanoHTTPD library

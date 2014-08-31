@@ -20,12 +20,11 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity implements OnTouchListener{
 
-    private Button b1,b2,b3,b4,b5,b6,b7,b8,b9,bkey;
-    private TextView tvip,tvkey;
+    private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, bkey;
+    private TextView tvip, tvkey;
     private EditText etkey;
     private ToneGenerator tg;
-    private int port = 4000;
-    
+
     @SuppressWarnings("deprecation")
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +64,16 @@ public class MainActivity extends Activity implements OnTouchListener{
 			}
 		});
         tg = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
-		tvkey.setText("Current key is: "+getSharedPreferences("server", 0).getString("key", ""));
+		tvkey.setText("Current key is: " + getSharedPreferences("server", 0).getString("key", ""));
 
-        Intent service = new Intent(getApplicationContext(),DTMFgen.class);
+        Intent service = new Intent(getApplicationContext(), DTMFgen.class);
         service.setData(Uri.parse("a"));
         startService(service);
 
-		WifiManager wim= (WifiManager) getSystemService(WIFI_SERVICE);
+		WifiManager wim = (WifiManager) getSystemService(WIFI_SERVICE);
 		String IP;
-		IP=Formatter.formatIpAddress(wim.getConnectionInfo().getIpAddress());
-		tvip.setText(IP+":"+port);
+		IP = Formatter.formatIpAddress(wim.getConnectionInfo().getIpAddress());
+		tvip.setText(IP + ":" + DTMFgen.PORT);
     }
 
 	@Override
